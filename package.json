@@ -1,0 +1,19 @@
+{
+  "name": "metamorfosis3d",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "animejs": "^4.5.0",
+    "three": "^0.186.1",
+    "vite": "^8.3.3"
+  }
+}

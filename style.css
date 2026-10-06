@@ -1,0 +1,404 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+
+:root {
+  --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+  
+  --color-text-dark: #1e293b;
+  --color-text-muted: #64748b;
+  --color-accent-green: #2e7d32;
+  --color-accent-gold: #f59e0b;
+  --color-accent-orange: #ea580c;
+  
+  --bg-card: rgba(255, 255, 255, 0.78);
+  --border-card: rgba(255, 255, 255, 0.9);
+  --shadow-card: 0 20px 40px -15px rgba(0, 0, 0, 0.08), 0 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  font-family: var(--font-main);
+  color: var(--color-text-dark);
+  background-color: #d4efdf;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 1. Jalur Scroll (~500vh sesuai instruksi konsep) */
+#scroll-track {
+  height: 500vh;
+  position: relative;
+  pointer-events: none;
+}
+
+/* 2. Three.js Canvas Layar Penuh (Fixed) */
+#canvas-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+}
+
+#canvas-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* 3. Progress Bar Tipis di Bagian Atas Layar */
+#progress-bar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.06);
+  z-index: 100;
+}
+
+#progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #43a047, #f59e0b, #ea580c);
+  transition: width 0.1s ease-out;
+}
+
+/* 4. Header Atas */
+.header-overlay {
+  position: fixed;
+  top: 24px;
+  left: 28px;
+  z-index: 20;
+  pointer-events: auto;
+}
+
+.brand-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #1b4332;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(46, 125, 50, 0.15);
+  color: #2e7d32;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.brand-subtitle {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #406343;
+  margin-top: 2px;
+}
+
+/* 5. Indikator Progres 4 Titik di Samping Kanan Layar */
+.stages-nav {
+  position: fixed;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.stage-dot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  outline: none;
+}
+
+.dot-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #52796f;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+}
+
+.dot-circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(46, 125, 50, 0.28);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.stage-dot:hover .dot-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.stage-dot:hover .dot-circle {
+  transform: scale(1.3);
+  background: #2e7d32;
+}
+
+.stage-dot.active .dot-circle {
+  transform: scale(1.45);
+  background: #2e7d32;
+  box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.2), 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.stage-dot.active .dot-label {
+  opacity: 1;
+  transform: translateX(0);
+  color: #1b4332;
+}
+
+/* 6. Kartu Narasi Teks Minimalis per Tahap */
+.stage-narrative-container {
+  position: fixed;
+  bottom: 32px;
+  left: 28px;
+  max-width: 440px;
+  width: calc(100vw - 56px);
+  z-index: 20;
+  pointer-events: none;
+}
+
+.stage-card {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-card);
+  border-radius: 20px;
+  padding: 24px 28px;
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  transform: translateY(24px) scale(0.97);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+}
+
+.stage-card.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.stage-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #2e7d32;
+  margin-bottom: 6px;
+}
+
+.stage-title {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--color-text-dark);
+  margin-bottom: 10px;
+}
+
+.stage-desc {
+  font-size: 0.94rem;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+/* 7. Petunjuk Gulir di Bawah */
+.scroll-hint {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #2d5a3f;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(8px);
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  animation: bounceHint 2s infinite ease-in-out;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+
+.scroll-hint.hidden {
+  opacity: 0;
+  transform: translate(-50%, 15px);
+}
+
+@keyframes bounceHint {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -6px); }
+}
+
+/* 8. Layar Pemuatan (Loading Screen) */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  background: #d4efdf;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  transition: opacity 0.5s ease;
+}
+
+#loading-screen.loaded {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.voxel-spinner {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  animation: spinVoxel 1.6s infinite ease-in-out;
+}
+
+.cube-cell {
+  background: #2e7d32;
+  border-radius: 4px;
+}
+
+.cube-cell:nth-child(2) { background: #66bb6a; }
+.cube-cell:nth-child(3) { background: #f59e0b; }
+.cube-cell:nth-child(4) { background: #ea580c; }
+
+@keyframes spinVoxel {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(0.85); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.loading-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #1b4332;
+  letter-spacing: 0.02em;
+}
+
+/* Aksesibilitas: prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Responsif untuk Layar Ponsel & Tablet */
+@media (max-width: 640px) {
+  .header-overlay {
+    top: 14px;
+    left: 14px;
+    background: rgba(255, 255, 255, 0.76);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 6px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  }
+  .brand-title {
+    font-size: 1.15rem;
+    gap: 6px;
+  }
+  .brand-badge {
+    font-size: 0.6rem;
+    padding: 2px 6px;
+  }
+  .brand-subtitle {
+    display: none; /* Sembunyikan subtitle di ponsel agar layar bersih */
+  }
+  .stages-nav {
+    right: 12px;
+    gap: 12px;
+  }
+  .stage-dot {
+    padding: 8px 6px; /* Area tap jari ponsel lebih nyaman dan responsif */
+  }
+  .dot-circle {
+    width: 14px;
+    height: 14px;
+  }
+  .dot-label {
+    display: none; /* Sembunyikan label teks di ponsel agar tidak menutupi 3D */
+  }
+  .stage-narrative-container {
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    left: 14px;
+    width: calc(100vw - 28px);
+    max-width: 420px;
+  }
+  .stage-card {
+    padding: 16px 20px;
+    border-radius: 18px;
+  }
+  .stage-badge {
+    font-size: 0.68rem;
+    margin-bottom: 4px;
+  }
+  .stage-title {
+    font-size: 1.25rem;
+    margin-bottom: 6px;
+  }
+  .stage-desc {
+    font-size: 0.84rem;
+    line-height: 1.45;
+  }
+  .scroll-hint {
+    bottom: 210px;
+    font-size: 0.72rem;
+    padding: 6px 12px;
+  }
+}

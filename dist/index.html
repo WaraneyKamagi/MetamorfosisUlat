@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metamorfosis 3D - Dari Ulat Menjadi Kupu-Kupu (Voxel Art)</title>
+  <meta name="description" content="Eksplorasi interaktif 3D metamorfosis kupu-kupu dalam gaya voxel. Gulir untuk menyaksikan perjalanan hidup dari telur, ulat, kepompong, hingga kupu-kupu bersayap indah.">
+  <script type="module" crossorigin src="/assets/index-DDJ-LfL8.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DQxg5lqD.css">
+</head>
+<body>
+
+  <!-- Layar Pemuatan Singkat -->
+  <div id="loading-screen">
+    <div class="voxel-spinner">
+      <div class="cube-cell"></div>
+      <div class="cube-cell"></div>
+      <div class="cube-cell"></div>
+      <div class="cube-cell"></div>
+    </div>
+    <div class="loading-text">Memuat Dunia Voxel 3D...</div>
+  </div>
+
+  <!-- Indikator Baris Progres Atas -->
+  <div id="progress-bar-container">
+    <div id="progress-bar-fill"></div>
+  </div>
+
+  <!-- Header Judul Antarmuka -->
+  <header class="header-overlay">
+    <h1 class="brand-title">
+      Metamorfosis
+      <span class="brand-badge">Voxel 3D</span>
+    </h1>
+    <p class="brand-subtitle">Perjalanan Dari Telur Mungil Hingga Sayap Megah</p>
+  </header>
+
+  <!-- Navigasi 4 Titik Samping Layar -->
+  <nav class="stages-nav" aria-label="Navigasi Tahap Metamorfosis">
+    <button class="stage-dot active" data-stage="0" aria-label="Tahap 1: Telur">
+      <span class="dot-label">01. Telur</span>
+      <span class="dot-circle"></span>
+    </button>
+    <button class="stage-dot" data-stage="1" aria-label="Tahap 2: Ulat">
+      <span class="dot-label">02. Ulat</span>
+      <span class="dot-circle"></span>
+    </button>
+    <button class="stage-dot" data-stage="2" aria-label="Tahap 3: Kepompong">
+      <span class="dot-label">03. Kepompong</span>
+      <span class="dot-circle"></span>
+    </button>
+    <button class="stage-dot" data-stage="3" aria-label="Tahap 4: Kupu-Kupu">
+      <span class="dot-label">04. Kupu-Kupu</span>
+      <span class="dot-circle"></span>
+    </button>
+  </nav>
+
+  <!-- Wadah Teks Narasi Minimalis Per Tahap -->
+  <main class="stage-narrative-container" aria-live="polite">
+    <!-- Tahap 1 -->
+    <article class="stage-card active" data-stage="0">
+      <span class="stage-badge">Hari 1 – 4</span>
+      <h2 class="stage-title">01. Telur Mungil</h2>
+      <p class="stage-desc">Kehidupan berawal dari sebutir telur voxel kecil di atas helai daun segar. Cangkang retak lembut, dan seekor ulat mungil keluar menyapa dunia.</p>
+    </article>
+
+    <!-- Tahap 2 -->
+    <article class="stage-card" data-stage="1">
+      <span class="stage-badge">Hari 5 – 20</span>
+      <h2 class="stage-title">02. Ulat (Larva)</h2>
+      <p class="stage-desc">Tubuh beruas merayap dengan gerak bergelombang di atas daun, makan dengan lahap, dan bertumbuh membesar bersiap untuk perubahan besar.</p>
+    </article>
+
+    <!-- Tahap 3 -->
+    <article class="stage-card" data-stage="2">
+      <span class="stage-badge">Hari 21 – 35</span>
+      <h2 class="stage-title">03. Kepompong (Pupa)</h2>
+      <p class="stage-desc">Menggantung di ranting dalam posisi J, balok-balok kepompong menyusun diri membungkusnya, lalu berdenyut halus dalam keheningan transformasi.</p>
+    </article>
+
+    <!-- Tahap 4 -->
+    <article class="stage-card" data-stage="3">
+      <span class="stage-badge">Hari 36+</span>
+      <h2 class="stage-title">04. Kupu-Kupu (Imago)</h2>
+      <p class="stage-desc">Kepompong merekah, sayap voxel corak oranye mengembang sempurna, mengepak pelan penuh keanggunan, lalu terbang bebas ke angkasa.</p>
+    </article>
+  </main>
+
+  <!-- Petunjuk Gulir -->
+  <div class="scroll-hint" id="scroll-hint">
+    <span>Gulir ke bawah untuk melanjutkan cerita</span>
+    <span>↓</span>
+  </div>
+
+  <!-- Wadah Canvas Three.js Layar Penuh -->
+  <div id="canvas-container"></div>
+
+  <!-- Jalur Scroll 500vh (Pengendali Timeline) -->
+  <div id="scroll-track"></div>
+
+  <!-- Script Aplikasi Utama -->
+</body>
+</html>
